@@ -1,6 +1,7 @@
 const response = require('../helpers/response');
 const db = require('../model/users');
 const bcrypt = require('bcrypt');
+const hash = require('../helpers/hash')
 
 module.exports = {
     validateBody(req, res, next) {
@@ -24,6 +25,7 @@ module.exports = {
         } catch (error) {
             return response.errorHandler(res, 500, "Error")
         }
+        next()
     },
 
     async validatePassword(req, res, next) {
@@ -34,6 +36,7 @@ module.exports = {
                 return response.errorHandler(res, 404, "Invalid username")
             }
             const result = await bcrypt.compareSync(body.password, user.password)
+            // const result = await hash.compare(body.password, user.password)
             if(!result) {
                 return response.errorHandler(res, 401, 'Invalid credentials')
             }
@@ -41,6 +44,7 @@ module.exports = {
         } catch (error) {
             return response.errorHandler(res, 500, "Error login")
         }
+        next()
     },
 
     async getUsers(req, res, next) {
