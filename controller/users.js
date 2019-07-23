@@ -18,6 +18,7 @@ module.exports = {
     },
 
     loginUser(req,res) {
+        req.session.user = req.user
         return response.successHandler(res, 200, `welcome ${req.user}`)
     },
 
@@ -27,6 +28,19 @@ module.exports = {
             return response.successHandler(res, 200, user)
         } catch (error) {
             return response.errorHandler(res, 500, "Error cannot get users")
+        }
+    },
+
+    async logoutUser(req, res) {
+        if(req.session) {
+            req.session.destroy(err =>{
+                if(err) {
+                    return response.errorHandler(res, 400, "You cant logout at the momment")
+                }
+                return response.successHandler(res, 200, "Logout sucessful")
+            })
+        } else{
+            return response.errorHandler(res, 400, "You were never logged in")
         }
     }
 }

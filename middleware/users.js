@@ -58,5 +58,13 @@ module.exports = {
         }else {
             return response.errorHandler(res, 401, "Unathorized")
         }
+    },
+
+    async getUserSession(req,res,next) {
+        if(req.session && req.session.user) {
+            next()
+        }else{
+            return response.errorHandler(res, 401, "Unathorized kindly login")
+        }
     }
 }
